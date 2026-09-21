@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Révisions maths — 20 sept</title>
+<style>
+  :root {
+    --bg: #11140f;
+    --card: #1c2218;
+    --ink: #f4f0e4;
+    --muted: #b7c0a8;
+    --gold: #d4b05c;
+    --ok: #8fce6a;
+    --bad: #e07a5f;
+    --line: #3a4332;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+    padding: 18px 16px 48px;
+  }
+  h1 { font-size: 1.35rem; margin: 0 0 6px; }
+  .sub { color: var(--muted); font-size: .95rem; margin-bottom: 18px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    margin: 0 0 14px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: .75rem;
+    letter-spacing: .04em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .q { font-size: 1.15rem; font-weight: 600; }
+  .math {
+    font-size: 1.25rem;
+    margin: 10px 0;
+    padding: 10px 12px;
+    background: #0e120c;
+    border-radius: 10px;
+    overflow-wrap: anywhere;
+  }
+  .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 .2em; }
+  .frac span { padding: 0 .25em; }
+  .frac .num { border-bottom: 2px solid var(--ink); }
+  button, .opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: var(--ink);
+    background: #262e20;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 8px 0 0;
+  }
+  .opt { cursor: pointer; }
+  .opt.ok { border-color: var(--ok); background: #1c2a16; }
+  .opt.bad { border-color: var(--bad); background: #2a1814; }
+  .opt:disabled { opacity: 1; }
+  .corr {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #141910;
+    color: var(--muted);
+  }
+  .corr.show { display: block; }
+  .corr b { color: var(--ok); }
+  textarea {
+    width: 100%;
+    min-height: 72px;
+    margin-top: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #0e120c;
+    color: var(--ink);
+    font: inherit;
+    padding: 10px;
+  }
+</style>
+</head>
+<body>
+  <h1>Révisions maths</h1>
+  <p class="sub">D’après tes fiches (équations + second degré). Une question après l’autre. Tape une réponse, puis « Voir la correction ».</p>
+
+  <div class="card" data-q="1">
+    <div class="tag">Q1 · définition</div>
+    <div class="q">Un quotient A / B est nul. Quelle est la condition exacte ?</div>
+    <button class="opt" type="button">A = 0, peu importe B</button>
+    <button class="opt" type="button">B = 0</button>
+    <button class="opt" data-ok type="button">A = 0 et B différent de 0</button>
+    <button class="opt" type="button">A et B tous les deux nuls</button>
+    <div class="corr"><b>Correction.</b> Un quotient est nul seulement si le numérateur est 0 et le dénominateur n’est pas 0. Sinon c’est interdit (division par 0).</div>
+  </div>
+
+  <div class="card" data-q="2">
+    <div class="tag">Q2 · exemple du cahier</div>
+    <div class="q">Résous :</div>
+    <div class="math">
+      <span class="frac"><span class="num">3x + 1</span><span>−x + 6</span></span> = 0
+    </div>
+    <button class="opt" type="button">S = tous les réels sauf 6</button>
+    <button class="opt" data-ok type="button">S = { −1/3 }</button>
+    <button class="opt" type="button">S = { 6 }</button>
+    <button class="opt" type="button">S = { −1/3 ; 6 }</button>
+    <div class="corr"><b>Correction.</b> Interdit : x = 6 (dénominateur). Numérateur : 3x+1 = 0 → x = −1/3. −1/3 n’est pas 6, donc S = { −1/3 }. Attention : « on travaille dans R sans 6 » ce n’est pas S.</div>
+  </div>
+
+  <div class="card" data-q="3">
+    <div class="tag">Q3 · définition</div>
+    <div class="q">Qu’est-ce qu’un trinôme du second degré ?</div>
+    <button class="opt" data-ok type="button">ax² + bx + c avec a différent de 0</button>
+    <button class="opt" type="button">n’importe quel polynôme avec 3 termes</button>
+    <button class="opt" type="button">ax² + bx + c, même si a = 0</button>
+    <button class="opt" type="button">uniquement si b et c sont non nuls</button>
+    <div class="corr"><b>Correction.</b> f(x) = ax² + bx + c avec a ≠ 0. b ou c peuvent être 0 : x²+2 et −4x² sont des trinômes.</div>
+  </div>
+
+  <div class="card" data-q="4">
+    <div class="tag">Q4 · exemple à refaire</div>
+    <div class="q">x ↦ (2x+3)(x−1) est-il un trinôme ? Si oui, a, b, c ?</div>
+    <button class="opt" type="button">Non, c’est un produit</button>
+    <button class="opt" data-ok type="button">Oui : a = 2, b = 1, c = −3</button>
+    <button class="opt" type="button">Oui : a = 2, b = 3, c = −1</button>
+    <button class="opt" type="button">Oui : a = 1, b = 2, c = −3</button>
+    <div class="corr"><b>Correction.</b> (2x+3)(x−1) = 2x² −2x +3x −3 = 2x² + x − 3. Donc a=2, b=1, c=−3.</div>
+  </div>
+
+  <div class="card" data-q="5">
+    <div class="tag">Q5 · ouverte</div>
+    <div class="q">Formule de alpha dans la forme canonique ?</div>
+    <div class="math">P(x) = a(x − α)² + β</div>
+    <textarea placeholder="Écris la formule…"></textarea>
+    <button type="button" class="reveal">Voir la correction</button>
+    <div class="corr"><b>Correction.</b> α = −b / (2a) et β = P(α). Le sommet de la parabole est S(α, β).</div>
+  </div>
+
+  <div class="card" data-q="6">
+    <div class="tag">Q6 · variations</div>
+    <div class="q">Si a &gt; 0, la parabole est en U. Où est le min, et que fait f autour de α ?</div>
+    <textarea placeholder="Écris en une ou deux phrases…"></textarea>
+    <button type="button" class="reveal">Voir la correction</button>
+    <div class="corr"><b>Correction.</b> Minimum en x = α, valeur β. f décroît sur ]−∞ ; α] et croît sur [α ; +∞[.</div>
+  </div>
+
+<script>
+  document.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.card');
+      card.querySelectorAll('.opt').forEach(b => {
+        b.disabled = true;
+        if (b.dataset.ok !== undefined) b.classList.add('ok');
+      });
+      if (btn.dataset.ok === undefined) btn.classList.add('bad');
+      card.querySelector('.corr').classList.add('show');
+    });
+  });
+  document.querySelectorAll('.reveal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.card').querySelector('.corr').classList.add('show');
+    });
+  });
+</script>
+</body>
+</html>

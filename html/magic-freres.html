@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Table — Magic entre frères</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#100e0c; --surface:#1a1612; --ink:#f4ead7; --muted:#9b907c;
+      --line:#2c261f; --gold:#d4a24a; --gold2:#8a6a2a; --good:#7dba6a; --bad:#d36b5a;
+      --w:#f0ead8; --u:#6ea8d8; --b:#6b6570; --r:#d06a4a; --g:#6aa36a;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;max-width:100%;overflow-x:hidden;background:var(--bg);color:var(--ink);
+      font:16px/1.45 Outfit,sans-serif;-webkit-text-size-adjust:100%}
+    body{min-height:100dvh;padding-bottom:88px}
+    .app{max-width:460px;margin:0 auto;padding:16px 16px 24px}
+    h1{font-family:Fraunces,Georgia,serif;font-size:28px;font-weight:560;margin:4px 0 4px;letter-spacing:-.03em}
+    .lede{color:var(--muted);margin:0 0 16px;font-size:14px}
+    .hidden{display:none!important}
+    button,input,select,textarea{font:inherit}
+    .row{display:flex;gap:8px}
+    .grow{flex:1}
+    input[type=search],input[type=text],textarea,select{
+      width:100%;background:var(--surface);border:1px solid var(--line);color:var(--ink);
+      border-radius:12px;padding:12px 14px;min-height:48px
+    }
+    textarea{min-height:92px;resize:vertical}
+    .btn{
+      min-height:48px;border:0;border-radius:12px;padding:0 16px;cursor:pointer;font-weight:600
+    }
+    .btn.gold{background:var(--gold);color:#1a1208}
+    .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+    .btn:disabled{opacity:.45}
+    .hint{font-size:13px;color:var(--muted);margin:8px 0}
+    .err{color:var(--bad);font-size:13px;margin:8px 0}
+    .ok{color:var(--good);font-size:13px;margin:8px 0}
+
+    .suggest{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-top:8px;overflow:hidden}
+    .suggest button{
+      display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;
+      color:var(--ink);padding:10px 12px;cursor:pointer;min-height:56px
+    }
+    .suggest button + button{border-top:1px solid var(--line)}
+    .suggest img{width:40px;height:56px;object-fit:cover;border-radius:4px;background:#000}
+    .suggest b{display:block;font-size:14px}
+    .suggest span{display:block;font-size:12px;color:var(--muted)}
+
+    .cardlist{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+    .card{
+      display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;
+      background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 10px
+    }
+    .card img{width:48px;height:66px;object-fit:cover;border-radius:6px;background:#000}
+    .card .name{font-weight:600;font-size:14px}
+    .card .meta{font-size:12px;color:var(--muted)}
+    .qty{display:flex;align-items:center;gap:4px}
+    .qty button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#241f19;color:var(--ink)}
+    .pips{display:flex;gap:4px;margin-top:4px}
+    .pip{width:10px;height:10px;border-radius:50%}
+
+    .tabs{
+      position:fixed;left:0;right:0;bottom:0;background:#161310;border-top:1px solid var(--line);
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:5
+    }
+    .tabs nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;max-width:460px}
+    .tabs button{
+      min-height:52px;border:0;border-radius:12px;background:transparent;color:var(--muted);
+      font-size:12px;font-weight:600;cursor:pointer
+    }
+    .tabs button.on{background:#241f19;color:var(--gold)}
+
+    .preview{width:100%;border-radius:16px;border:1px solid var(--line);max-height:280px;object-fit:contain;background:#000;margin:8px 0}
+    .file{display:block}
+    .file input{display:none}
+    .file span{
+      display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:12px;
+      border:1px dashed var(--gold2);color:var(--gold);font-weight:600
+    }
+
+    .deckhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:8px 0}
+    .syn{font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+    .syn b{color:var(--ink)}
+    .col{margin-top:16px}
+    .col h2{font-family:Fraunces,Georgia,serif;font-size:18px;font-weight:560;margin:0 0 8px}
+    .buy .name{color:var(--gold)}
+
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 8px}
+    .faq summary{cursor:pointer;font-weight:600}
+    .faq p{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="view-col">
+      <h1>Vos cartes</h1>
+      <p class="lede">Cherche un nom, colle une liste, ou ajoute depuis une photo. Tout reste sur ce téléphone.</p>
+      <button class="btn gold grow" id="importTable" type="button" style="width:100%;margin-bottom:12px">Ajouter le deck de la table (photos)</button>
+      <p id="importMsg" class="hint"></p>
+      <input id="q" type="search" placeholder="Lightning Bolt, Sol Ring…" autocomplete="off" />
+      <div id="suggest" class="suggest hidden"></div>
+      <p class="hint">Ou colle plusieurs noms, un par ligne :</p>
+      <textarea id="bulk" placeholder="Swords to Plowshares&#10;Llanowar Elves"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn gold grow" id="addBulk" type="button">Ajouter la liste</button>
+        <button class="btn ghost" id="copyCol" type="button">Copier</button>
+      </div>
+      <p id="colMsg" class="hint"></p>
+      <div class="deckhead"><span id="colCount" class="hint"></span><button class="btn ghost" id="wipe" type="button">Vider</button></div>
+      <div id="cards" class="cardlist"></div>
+    </section>
+
+    <section id="view-photo" class="hidden">
+      <h1>Photo</h1>
+      <p class="lede">Cadre le nom en haut de la carte. On lit le texte, tu confirmes.</p>
+      <label class="file"><input id="cam" type="file" accept="image/*" capture="environment" /><span>Prendre / choisir une photo</span></label>
+      <img id="shot" class="preview hidden" alt="Carte" />
+      <p id="ocrStatus" class="hint"></p>
+      <input id="ocrName" type="text" placeholder="Nom lu — corrige si besoin" />
+      <div id="ocrSuggest" class="suggest hidden"></div>
+      <button class="btn gold" id="ocrSearch" type="button" style="width:100%;margin-top:8px">Chercher cette carte</button>
+    </section>
+
+    <section id="view-deck" class="hidden">
+      <h1>Deck</h1>
+      <p class="lede">On part de vos cartes + terrains de base. Le reste, c’est des pistes d’achat.</p>
+      <div class="row">
+        <select id="fmt" class="grow">
+          <option value="60">60 cartes (cuisine)</option>
+          <option value="cmd">Commander (100)</option>
+        </select>
+        <button class="btn gold" id="build" type="button">Synergiser</button>
+      </div>
+      <div id="deckOut"></div>
+    </section>
+
+    <section id="view-help" class="hidden">
+      <h1>Pour commencer</h1>
+      <p class="lede">Les 8 règles qui débloquent 80 % des parties. Pour le reste : envoie-moi une photo ou une question ici, sur Telegram.</p>
+      <div class="faq">
+        <details open><summary>But du jeu</summary><p>Faire passer les points de vie de l’adversaire de 20 à 0 (40 en Commander). Tu gagnes aussi s’il ne peut plus piocher.</p></details>
+        <details><summary>Tour, dans l’ordre</summary><p>Dégager tes cartes → entretien/pioche → phase principale (terrains, sorts) → combat → 2e phase principale → fin de tour. Un seul terrain par tour, en principe.</p></details>
+        <details><summary>Couleurs</summary><p>Blanc : protection, petits soldats. Bleu : cartes, compteurs. Noir : sacrifice, discard. Rouge : dégâts directs, haste. Vert : gros persos, mana. Les cartes chères en mana d’une couleur demandent des terrains de cette couleur.</p></details>
+        <details><summary>Types</summary><p>Créature : attaque et bloque. Rituel : seulement à ton tour, phase principale. Éphémère : presque n’importe quand. Enchantement / artefact : restent. Planeswalker : loyauté. Terrain : produit le mana.</p></details>
+        <details><summary>La pile</summary><p>Quand quelqu’un joue un sort, l’autre peut répondre (éphémère / capacité). Le dernier sort joué se résout en premier.</p></details>
+        <details><summary>Combat</summary><p>Tu déclares les attaquants (dégagés). L’autre déclare les bloqueurs. Les dégâts arrivent ensuite. Une créature blessée meurt si les blessures ≥ son endurance. Les blessures s’effacent en fin de tour.</p></details>
+        <details><summary>Mots-clés utiles</summary><p>Vol : bloquée seulement par le vol / portée. Trample : le surplus de dégâts passe au joueur. Haste : attaque le tour où elle arrive. Vigilance : n’engage pas pour attaquer. Reach : bloque le vol. Hexproof : l’adversaire ne peut pas la cibler.</p></details>
+        <details><summary>Commander, en 4 lignes</summary><p>100 cartes, toutes différentes sauf terrains de base. Un légendaire comme chef. Toutes les cartes doivent coller à l’identité de couleur du chef (les symboles dans le coût et le texte). 40 PV, 21 dégâts de commandant = mort.</p></details>
+      </div>
+    </section>
+  </div>
+
+  <div class="tabs">
+    <nav>
+      <button type="button" class="on" data-view="col">Cartes</button>
+      <button type="button" data-view="photo">Photo</button>
+      <button type="button" data-view="deck">Deck</button>
+      <button type="button" data-view="help">Aide</button>
+    </nav>
+  </div>
+
+<script>
+const LS = 'magic-freres-col-v1';
+const API = 'https://api.scryfall.com';
+let col = load();
+let tesseract = null;
+
+function load(){
+  try { return JSON.parse(localStorage.getItem(LS) || '[]'); }
+  catch { return []; }
+}
+function save(){ localStorage.setItem(LS, JSON.stringify(col)); renderCol(); }
+function $(id){ return document.getElementById(id); }
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+function pips(ci){
+  const map = {W:'var(--w)',U:'var(--u)',B:'var(--b)',R:'var(--r)',G:'var(--g)'};
+  return (ci||[]).map(c => `<i class="pip" style="background:${map[c]||'#888'}"></i>`).join('');
+}
+function imgOf(c){
+  return (c.image_uris && (c.image_uris.small || c.image_uris.normal))
+    || (c.card_faces && c.card_faces[0].image_uris && c.card_faces[0].image_uris.small)
+    || '';
+}
+
+async function scry(path){
+  const r = await fetch(API + path);
+  if(!r.ok) throw new Error('Carte introuvable');
+  return r.json();
+}
+function slim(c){
+  return {
+    id: c.id,
+    name: c.name,
+    type_line: c.type_line || '',
+    oracle_text: c.oracle_text || (c.card_faces && c.card_faces.map(f => f.oracle_text).join('\n')) || '',
+    mana_cost: c.mana_cost || (c.card_faces && c.card_faces[0].mana_cost) || '',
+    cmc: c.cmc || 0,
+    color_identity: c.color_identity || [],
+    keywords: c.keywords || [],
+    image: imgOf(c)
+  };
+}
+function addCard(c, n){
+  const s = slim(c);
+  const hit = col.find(x => x.id === s.id);
+  if(hit) hit.qty += n || 1;
+  else col.push({...s, qty: n || 1});
+  save();
+}
+
+function renderCol(){
+  $('colCount').textContent = col.reduce((a,c)=>a+c.qty,0) + ' cartes · ' + col.length + ' noms';
+  const box = $('cards');
+  if(!col.length){ box.innerHTML = '<p class="hint">Aucune carte pour l’instant.</p>'; return; }
+  box.innerHTML = col.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c => `
+    <article class="card">
+      <img src="${c.image}" alt="" />
+      <div>
+        <div class="name">${c.name}</div>
+        <div class="meta">${c.mana_cost || ''} · ${c.type_line}</div>
+        <div class="pips">${pips(c.color_identity)}</div>
+      </div>
+      <div class="qty">
+        <button type="button" data-id="${c.id}" data-d="-1">−</button>
+        <b>${c.qty}</b>
+        <button type="button" data-id="${c.id}" data-d="1">+</button>
+      </div>
+    </article>`).join('');
+  box.querySelectorAll('[data-id]').forEach(b => b.onclick = () => {
+    const it = col.find(x => x.id === b.dataset.id);
+    if(!it) return;
+    it.qty += Number(b.dataset.d);
+    if(it.qty <= 0) col = col.filter(x => x.id !== it.id);
+    save();
+  });
+}
+
+let tSearch;
+$('q').addEventListener('input', () => {
+  clearTimeout(tSearch);
+  const v = $('q').value.trim();
+  if(v.length < 2){ $('suggest').classList.add('hidden'); return; }
+  tSearch = setTimeout(() => suggest(v, 'suggest', true), 280);
+});
+
+async function suggest(q, where, addOnClick){
+  const box = $(where);
+  box.classList.remove('hidden');
+  box.innerHTML = '<p class="hint" style="padding:10px">Recherche…</p>';
+  try{
+    const auto = await scry('/cards/autocomplete?q=' + encodeURIComponent(q));
+    const names = (auto.data || []).slice(0, 6);
+    if(!names.length){ box.innerHTML = '<p class="hint" style="padding:10px">Rien.</p>'; return; }
+    const cards = [];
+    for(const name of names){
+      try{
+        cards.push(await scry('/cards/named?exact=' + encodeURIComponent(name)));
+        await sleep(80);
+      }catch{}
+    }
+    box.innerHTML = cards.map((c,i) => `
+      <button type="button" data-i="${i}">
+        <img src="${imgOf(c)}" alt="" />
+        <div><b>${c.name}</b><span>${c.mana_cost || ''} · ${c.type_line}</span></div>
+      </button>`).join('');
+    box.querySelectorAll('button').forEach(b => b.onclick = () => {
+      if(addOnClick){ addCard(cards[Number(b.dataset.i)], 1); $('q').value=''; box.classList.add('hidden'); $('colMsg').textContent = cards[Number(b.dataset.i)].name + ' ajoutée.'; }
+      else {
+        addCard(cards[Number(b.dataset.i)], 1);
+        box.classList.add('hidden');
+        $('ocrStatus').textContent = cards[Number(b.dataset.i)].name + ' ajoutée à la collection.';
+        $('ocrStatus').className = 'ok';
+      }
+    });
+  }catch(e){
+    box.innerHTML = '<p class="err" style="padding:10px">Réseau Scryfall KO.</p>';
+  }
+}
+
+const TABLE_SEED = [
+  ['Ultimo, Civilization\'s End', 1],
+  ['Doom Blade', 1],
+  ['The Falcon, Sam Wilson', 1],
+  ['Hour of Defeat', 1],
+  ['Glamorous Grapplers', 1],
+  ['Ant-Man, Scott Lang', 1],
+  ['The Wasp, Janet van Dyne', 1],
+  ['Hawkeye, Clint Barton', 2],
+  ['Agents of S.H.I.E.L.D.', 1],
+  ['Captain\'s Defense', 1],
+  ['Hero in Training', 1],
+  ['Okoye, Dora Milaje Leader', 1],
+  ['Wondrous Revival', 1],
+  ['Hawkeye\'s Shot', 1],
+  ['Soldier On', 1],
+  ['Hand Ninja', 1],
+  ['Tombstone, Career Criminal', 1],
+  ['Mockingbird, Bobbi Morse', 1],
+  ['Fall to Earth', 1],
+  ['Winter Soldier, Bucky Barnes', 1],
+  ['Dark Deed', 1],
+  ['Crossbones, Malevolent Mercenary', 1],
+  ['Brave Brawler', 1],
+  ['Baron Strucker', 1],
+  ['Mandroid Squadron', 1],
+  ['Agent of Atlas', 1],
+  ['Pacifism', 1],
+  ['Reinforcement Agent', 2],
+  ['Red Room Recruit', 1],
+  ['Minotaur, Roxxon CEO', 1],
+  ['Boomerang, Blade-Slinger', 1],
+  ['Malevolent Visions', 1],
+  ['Captain America, Steve Rogers', 1],
+  ['Iconic Shield', 1],
+  ['Roxxon Brutes', 1],
+  ['Peggy Carter, Secret Agent', 1],
+  ['Valkyrior Skyrider', 1],
+  ['A Little Chat', 1],
+  ['Tidal Terror', 1],
+  ['Urza\'s Rebuff', 2],
+  ['Gandalf, White Rider', 1],
+  ['Fading Hope', 2],
+  ['Moodmark Painter', 1],
+  ['Ossuary Rats', 1],
+  ['Pit Keeper', 1],
+  ['Aragorn and Arwen, Wed', 1],
+  ['You Cannot Pass!', 1],
+  ['Landroval, Horizon Witness', 1],
+  ['Gix\'s Caress', 1],
+  ['Nebelgast Beguiler', 1],
+  ['Asmodeus the Archfiend', 1],
+  ['Samite Herbalist', 1],
+  ['Thriving Heath', 1],
+  ['Thriving Isle', 1],
+  ['Plains', 11],
+  ['Swamp', 7]
+];
+
+async function importSeed(seed, msgEl){
+  const el = $(msgEl);
+  el.className = 'hint';
+  let ok = 0, copies = 0, ko = [];
+  for(let i=0;i<seed.length;i++){
+    const [name, qty] = seed[i];
+    el.textContent = 'Ajout ' + (i+1) + '/' + seed.length + '… ' + name;
+    try{
+      const c = await scry('/cards/named?fuzzy=' + encodeURIComponent(name));
+      addCard(c, qty); ok++; copies += qty;
+    }catch{ ko.push(name); }
+    await sleep(90);
+  }
+  el.className = ko.length ? 'err' : 'ok';
+  el.textContent = copies + ' cartes ajoutées (' + ok + ' noms).'
+    + (ko.length ? ' Pas trouvées : ' + ko.join(', ') : '');
+}
+
+$('importTable').onclick = () => {
+  if(col.length && !confirm('Ajouter le deck des photos en plus de ce qui est déjà là ?')) return;
+  importSeed(TABLE_SEED, 'importMsg');
+};
+
+$('addBulk').onclick = async () => {
+  const lines = $('bulk').value.split(/\n+/).map(s => s.trim()).filter(Boolean);
+  if(!lines.length) return;
+  $('colMsg').textContent = 'Ajout…';
+  let ok = 0, ko = [];
+  for(const line of lines){
+    try{
+      const c = await scry('/cards/named?fuzzy=' + encodeURIComponent(line));
+      addCard(c, 1); ok++;
+    }catch{ ko.push(line); }
+    await sleep(90);
+  }
+  $('colMsg').textContent = ok + ' ajoutées.' + (ko.length ? ' Pas trouvées : ' + ko.join(', ') : '');
+  if(ok) $('bulk').value = '';
+};
+$('copyCol').onclick = async () => {
+  const t = col.map(c => c.qty + ' ' + c.name).join('\n');
+  try{ await navigator.clipboard.writeText(t); $('colMsg').textContent = 'Liste copiée.'; }
+  catch{ $('colMsg').textContent = t; }
+};
+$('wipe').onclick = () => { if(confirm('Vider la collection ?')){ col = []; save(); } };
+
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x===b));
+  ['col','photo','deck','help'].forEach(v => $('view-'+v).classList.toggle('hidden', v !== b.dataset.view));
+});
+
+$('ocrSearch').onclick = () => {
+  const v = $('ocrName').value.trim();
+  if(v.length < 2) return;
+  suggest(v, 'ocrSuggest', false);
+};
+
+$('cam').onchange = async (ev) => {
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  const url = URL.createObjectURL(file);
+  $('shot').src = url;
+  $('shot').classList.remove('hidden');
+  $('ocrStatus').className = 'hint';
+  $('ocrStatus').textContent = 'Lecture du nom… (premier coup un peu long)';
+  try{
+    if(!tesseract){
+      await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js');
+    }
+    const { data } = await Tesseract.recognize(file, 'eng', { logger: m => {
+      if(m.status === 'recognizing text') $('ocrStatus').textContent = 'Lecture… ' + Math.round((m.progress||0)*100) + '%';
+    }});
+    const lines = (data.text || '').split('\n').map(s => s.trim()).filter(s => s.length > 3);
+    const guess = (lines[0] || '').replace(/[^A-Za-z0-9,'\- ]/g,' ').replace(/\s+/g,' ').trim();
+    $('ocrName').value = guess;
+    $('ocrStatus').textContent = guess ? 'Vérifie le nom, puis cherche.' : 'Rien lu. Tape le nom à la main.';
+    if(guess) suggest(guess, 'ocrSuggest', false);
+  }catch(e){
+    $('ocrStatus').className = 'err';
+    $('ocrStatus').textContent = 'OCR indispo. Tape le nom que tu vois.';
+  }
+};
+function loadScript(src){
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
+  });
+}
+
+function tags(c){
+  const blob = (c.type_line + ' ' + c.oracle_text + ' ' + (c.keywords||[]).join(' ')).toLowerCase();
+  const t = new Set();
+  if(/creature/i.test(c.type_line)) t.add('creature');
+  if(/instant|sorcery/i.test(c.type_line)) t.add('spell');
+  if(/artifact/i.test(c.type_line)) t.add('artifact');
+  if(/enchantment/i.test(c.type_line)) t.add('enchant');
+  if(/planeswalker/i.test(c.type_line)) t.add('pw');
+  if(/legendary/i.test(c.type_line)) t.add('legend');
+  if(/land/i.test(c.type_line) && !/creature/i.test(c.type_line)) t.add('land');
+  if(/destroy|exile|fight|deals? \d+ damage/.test(blob)) t.add('removal');
+  if(/counter target/.test(blob)) t.add('counter');
+  if(/draw a card|draw two|draw three/.test(blob)) t.add('draw');
+  if(/search your library.*land|add \{|treasure token|extra land/.test(blob)) t.add('ramp');
+  if(/flying/.test(blob)) t.add('flying');
+  if(/token/.test(blob)) t.add('tokens');
+  if(/graveyard|when .* dies|from your graveyard/.test(blob)) t.add('gy');
+  if(/\+1\/\+1/.test(blob)) t.add('counters');
+  if(/lifelink|gain .* life/.test(blob)) t.add('life');
+  if(/haste/.test(blob)) t.add('haste');
+  const m = c.type_line.match(/Creature[^\n—–-]*[—–-]\s*(.+)/i);
+  if(m) m[1].split(/[\s\/]+/).forEach(x => { if(x.length>2) t.add('type:'+x.toLowerCase()); });
+  return t;
+}
+function colorKey(ci){ return (ci||[]).slice().sort().join(''); }
+function inId(card, id){ return (card.color_identity||[]).every(c => id.includes(c)); }
+
+function pickIdentity(pool){
+  const count = {W:0,U:0,B:0,R:0,G:0};
+  pool.forEach(c => (c.color_identity||[]).forEach(x => count[x]+=c.qty));
+  const ranked = Object.entries(count).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>0).map(x=>x[0]);
+  if(!ranked.length) return [];
+  if(ranked.length===1) return ranked;
+  return ranked.slice(0, 2);
+}
+
+function scoreCard(c, theme){
+  const t = tags(c);
+  let s = 1;
+  theme.forEach(k => { if(t.has(k)) s += 3; });
+  if(t.has('removal')) s += 2;
+  if(t.has('draw')) s += 2;
+  if(t.has('ramp')) s += 2;
+  if(t.has('creature') && c.cmc <= 4) s += 1;
+  if(c.cmc >= 7) s -= 1;
+  if(t.has('land')) s -= 5;
+  return s;
+}
+
+function themeOf(pool){
+  const freq = {};
+  pool.forEach(c => tags(c).forEach(k => {
+    if(k==='creature'||k==='spell'||k==='land') return;
+    freq[k] = (freq[k]||0)+c.qty;
+  }));
+  return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]);
+}
+
+const BASICS = {
+  W:{name:'Plains', qty:0}, U:{name:'Island', qty:0}, B:{name:'Swamp', qty:0},
+  R:{name:'Mountain', qty:0}, G:{name:'Forest', qty:0}
+};
+
+$('build').onclick = async () => {
+  const out = $('deckOut');
+  if(!col.length){ out.innerHTML = '<p class="err">Ajoute d’abord des cartes.</p>'; return; }
+  const fmt = $('fmt').value;
+  const id = pickIdentity(col);
+  const legal = col.filter(c => inId(c, id) && !tags(c).has('land'));
+  const theme = themeOf(legal);
+  const ranked = legal.slice().sort((a,b)=>scoreCard(b,theme)-scoreCard(a,theme));
+
+  let commander = null;
+  if(fmt==='cmd'){
+    commander = ranked.find(c => /legendary/i.test(c.type_line) && /creature|planeswalker/i.test(c.type_line)) || null;
+  }
+
+  const spells = [];
+  const used = new Set();
+  if(commander){ used.add(commander.id); }
+
+  const targetSpells = fmt==='cmd' ? 63 : 36;
+  const maxCopy = fmt==='cmd' ? 1 : 4;
+  for(const c of ranked){
+    if(used.has(c.id)) continue;
+    const n = Math.min(c.qty, maxCopy, targetSpells - spells.reduce((a,x)=>a+x.qty,0));
+    if(n<=0) continue;
+    spells.push({...c, qty:n});
+    used.add(c.id);
+    if(spells.reduce((a,x)=>a+x.qty,0) >= targetSpells) break;
+  }
+
+  const spellCount = spells.reduce((a,x)=>a+x.qty,0) + (commander?1:0);
+  const landNeed = (fmt==='cmd' ? 100 : 60) - spellCount;
+  const lands = [];
+  if(id.length){
+    const share = Math.floor(Math.max(landNeed,0) / id.length);
+    let rest = Math.max(landNeed,0);
+    id.forEach((c,i) => {
+      const n = i===id.length-1 ? rest : share;
+      rest -= n;
+      if(n>0) lands.push({name: BASICS[c].name, qty:n, type_line:'Basic Land', image:'', color_identity:[c], id:'basic-'+c});
+    });
+  }
+
+  const label = k => ({
+    flying:'vol', tokens:'jetons', gy:'cimetière', counters:'marqueurs +1/+1',
+    removal:'removal', draw:'pioche', ramp:'ramp', haste:'haste', life:'vie',
+    artifact:'artefacts', legend:'légendaires'
+  }[k] || k.replace('type:','tribu '));
+
+  const themeTxt = theme.filter(t=>!t.startsWith('type:')||theme.filter(x=>x.startsWith('type:')).indexOf(t)<2)
+    .slice(0,4).map(label).join(', ') || 'valeur générique';
+
+  out.innerHTML = `
+    <div class="syn">
+      <b>Couleurs :</b> ${id.join(' / ') || 'incolore'} · <b>Fil :</b> ${themeTxt}<br>
+      ${commander ? '<b>Commandant :</b> '+commander.name+'<br>' : ''}
+      ${spellCount} sorts + ${lands.reduce((a,c)=>a+c.qty,0)} terrains = ${spellCount + lands.reduce((a,c)=>a+c.qty,0)} cartes.
+      ${legal.length < 12 ? '<br>Collection un peu sèche : le deck est un squelette, vois les pistes en bas.' : ''}
+    </div>
+    ${commander ? block('Commandant', [commander]) : ''}
+    ${block('Sorts (vos cartes)', spells)}
+    ${block('Terrains de base (on suppose que vous en avez)', lands)}
+    <p class="hint" id="buyHint">Pistes d’achat dans les mêmes couleurs…</p>
+    <div id="buy" class="cardlist"></div>
+    <div class="row" style="margin-top:12px"><button class="btn ghost grow" id="copyDeck" type="button">Copier le deck</button></div>
+  `;
+
+  const deckTxt = [
+    commander ? '1 ' + commander.name : '',
+    ...spells.map(c => c.qty + ' ' + c.name),
+    ...lands.map(c => c.qty + ' ' + c.name)
+  ].filter(Boolean).join('\n');
+  $('copyDeck').onclick = async () => {
+    try{ await navigator.clipboard.writeText(deckTxt); }
+    catch{}
+  };
+
+  // buy-ins
+  try{
+    const qColors = id.length ? 'c:'+id.join('') : '';
+    const qTheme = theme.find(t => t.startsWith('type:'))
+      ? 't:'+theme.find(t=>t.startsWith('type:')).slice(5)
+      : (theme.includes('tokens') ? 'o:token' : theme.includes('flying') ? 'o:flying' : 't:creature');
+    const query = `${qColors} ${qTheme} f:commander -is:digital game:paper`.trim();
+    const data = await scry('/cards/search?q=' + encodeURIComponent(query) + '&order=edhrec');
+    const have = new Set(col.map(c => c.name.toLowerCase()));
+    const rec = (data.data||[]).filter(c => !have.has(c.name.toLowerCase()) && inId(slim(c), id)).slice(0,8);
+    $('buyHint').textContent = rec.length ? 'Pas dans votre pool — bonnes synchro à choper :' : 'Pas de pistes (Scryfall).';
+    $('buy').innerHTML = rec.map(c => {
+      const s = slim(c);
+      return `<article class="card buy">
+        <img src="${s.image}" alt="" />
+        <div><div class="name">${s.name}</div><div class="meta">${s.mana_cost||''} · ${s.type_line}</div></div>
+        <button class="btn ghost" type="button" data-add="${s.id}">+</button>
+      </article>`;
+    }).join('');
+    const map = Object.fromEntries(rec.map(c => [c.id, c]));
+    $('buy').querySelectorAll('[data-add]').forEach(b => b.onclick = () => addCard(map[b.dataset.add], 1));
+  }catch{
+    $('buyHint').textContent = '';
+  }
+};
+
+function block(title, arr){
+  if(!arr.length) return '';
+  return `<div class="col"><h2>${title}</h2><div class="cardlist">${arr.map(c => `
+    <article class="card">
+      ${c.image ? `<img src="${c.image}" alt="" />` : '<div></div>'}
+      <div><div class="name">${c.qty?c.qty+' ':''}${c.name}</div><div class="meta">${c.type_line||''}</div></div>
+    </article>`).join('')}</div></div>`;
+}
+
+renderCol();
+</script>
+</body>
+</html>

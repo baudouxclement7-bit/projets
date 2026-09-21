@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Table — Règles Magic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root, html[data-theme="table"]{
+      --bg:#100e0c; --surface:#1a1612; --ink:#f4ead7; --muted:#9b907c;
+      --line:#2c261f; --gold:#d4a24a; --gold2:#8a6a2a; --good:#7dba6a; --bad:#d36b5a;
+      --w:#f0ead8; --u:#6ea8d8; --b:#8a8490; --r:#d06a4a; --g:#6aa36a;
+      --chip:#241f19; --inset:#14110e; --body:#e8dcc6; --mark:#5a4318; --radius:16px;
+    }
+    html[data-theme="papier"]{
+      --bg:#f4ead8; --surface:#fffaf0; --ink:#1a140c; --muted:#6e6254;
+      --line:#e2d4bc; --gold:#9a5c14; --gold2:#c4893a; --good:#3f7a38; --bad:#b44538;
+      --chip:#efe4ce; --inset:#f7f0e2; --body:#2a2218; --mark:#f0d9a8; --radius:16px;
+    }
+    html[data-theme="nuit"]{
+      --bg:#0b1020; --surface:#141a2e; --ink:#e8eefc; --muted:#8b93ad;
+      --line:#24304c; --gold:#7eb0ff; --gold2:#4a78c8; --good:#6dce9a; --bad:#e07a72;
+      --chip:#1a2340; --inset:#0f1528; --body:#d5dcf0; --mark:#2a4a7a; --radius:16px;
+    }
+    html[data-theme="ink"]{
+      --bg:#070707; --surface:#111111; --ink:#f6f1e8; --muted:#8a8580;
+      --line:#2a2a2a; --gold:#e8d5b0; --gold2:#8a7a5c; --good:#8fbf88; --bad:#d37a70;
+      --chip:#1a1a1a; --inset:#0c0c0c; --body:#ece6dc; --mark:#3a3428; --radius:6px;
+    }
+    html[data-dense="on"] article{padding:12px}
+    html[data-dense="on"] .lede, html[data-dense="on"] p, html[data-dense="on"] li{font-size:15px}
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Outfit,sans-serif}
+    body{min-height:100dvh;transition:background .2s,color .2s;padding-top:env(safe-area-inset-top, 0px)}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .skin-btn{
+      flex-shrink:0;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line);
+      background:var(--chip);color:var(--ink);font:inherit;font-weight:600;cursor:pointer
+    }
+    .panel{
+      background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 14px
+    }
+    .panel b{display:block;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+    .swatches{display:flex;flex-wrap:wrap;gap:8px}
+    .swatch{min-height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--chip);color:var(--ink);font:inherit;font-weight:600;font-size:13px;cursor:pointer}
+    .swatch.on{border-color:var(--gold);color:var(--gold)}
+    .app{max-width:720px;margin:0 auto;padding:16px 16px 80px}
+    h1{font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:560;margin:8px 0 6px;letter-spacing:-.03em}
+    .lede{color:var(--muted);margin:0 0 16px;font-size:15px}
+    .search{
+      position:sticky;top:0;z-index:20;
+      background:var(--bg);
+      margin:0 -16px;padding:10px 16px 12px;
+      box-shadow:0 12px 16px var(--bg);
+      isolation:isolate;
+    }
+    .search::before{
+      content:"";position:absolute;left:0;right:0;bottom:100%;
+      height:env(safe-area-inset-top, 12px);background:var(--bg);
+    }
+    input[type=search]{
+      width:100%;background:var(--surface);border:1px solid var(--line);color:var(--ink);
+      border-radius:14px;padding:14px 16px;min-height:52px;font:inherit
+    }
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .chip{
+      border:1px solid var(--line);background:var(--chip);color:var(--muted);
+      border-radius:999px;padding:8px 12px;min-height:40px;font-weight:600;font-size:13px;cursor:pointer
+    }
+    .chip.on{border-color:var(--gold2);color:var(--gold);background:var(--chip)}
+    article{
+      background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+      padding:16px 16px 14px;margin:0 0 12px
+    }
+    article h2{font-family:Fraunces,Georgia,serif;font-size:22px;margin:0 0 8px;font-weight:560}
+    article h3{font-size:15px;margin:14px 0 6px;color:var(--gold)}
+    p,li{color:var(--body)}
+    .muted{color:var(--muted)}
+    .tag{display:inline-block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+    .ex{background:var(--chip);border-radius:12px;padding:10px 12px;margin:10px 0;color:var(--muted);font-size:14px}
+    .grid{display:grid;gap:8px}
+    @media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}}
+    .card{
+      border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--inset)
+    }
+    .card b{display:block;margin-bottom:4px}
+    .ok{color:var(--good)}
+    .no{color:var(--bad)}
+    .hidden{display:none!important}
+    .empty{color:var(--muted);padding:24px 8px;text-align:center}
+    .mana span{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px}
+    footer{color:var(--muted);font-size:12px;margin-top:24px}
+    a{color:var(--gold)}
+    mark{background:var(--mark);color:var(--ink);padding:0 2px;border-radius:3px}
+    .why{font-size:12px;color:var(--gold);margin:0 0 8px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <div>
+        <h1>Les sorts, et le reste</h1>
+        <p class="lede">Guide débutant pour toi et ton frère. Cherche un mot (vol, pile, éphémère…) ou tape une puce.</p>
+      </div>
+      <button class="skin-btn" id="skinBtn" type="button">Design</button>
+    </div>
+    <div class="panel hidden" id="skinPanel">
+      <b>Thème</b>
+      <div class="swatches" id="themes"></div>
+      <b style="margin-top:12px">Texte</b>
+      <div class="swatches">
+        <button class="swatch" type="button" data-dense="off">Normal</button>
+        <button class="swatch" type="button" data-dense="on">Compact</button>
+      </div>
+    </div>
+
+    <div class="search">
+      <input id="q" type="search" placeholder="Ex. enlever pacifisme, vol, c’est quoi un sort…" autocomplete="off" />
+      <div class="chips" id="chips"></div>
+      <p class="muted" id="count" style="margin:8px 0 0;font-size:13px"></p>
+    </div>
+    <p id="empty" class="empty hidden">Rien trouvé. Essaie « éphémère », « terrain », « combat ».</p>
+    <div id="list"></div>
+    <footer>Règles de base Magic, français. Pour un cas tordu en jeu : photo de la carte + question ici. Sources : Wizards How to Play / glossaire mots-clés.</footer>
+  </div>
+<script>
+const CHIPS = [
+  ['tout',''],
+  ['sorts','sort'],
+  ['types','type'],
+  ['tour','tour'],
+  ['combat','combat'],
+  ['pile','pile'],
+  ['terrains','terrain'],
+  ['mots-clés','mot-cle'],
+  ['deck','deck']
+];
+
+const ARTICLES = [
+{
+  id:'spell',
+  cat:'sort',
+  title:'C’est quoi un sort ?',
+  tags:'sort spell lancer pile',
+  html:`
+    <span class="tag">Le truc le plus mal nommé</span>
+    <p>En français on dit <b>sort</b>. En anglais : <b>spell</b>. Ce n’est <i>pas</i> seulement les cartes magiques qui explosent.</p>
+    <p><b>Un sort, c’est n’importe quelle carte que tu LANCES</b> — pendant qu’elle est « en l’air », en attente d’arriver.</p>
+    <div class="ex"><span class="ok">Sorts :</span> créature, éphémère, rituel, enchantement, artefact, planeswalker, bataille.<br>
+    <span class="no">Pas un sort :</span> un <b>terrain</b>. On ne le lance pas, on le <b>joue</b>.</div>
+    <h3>Le cycle de vie d’une carte non-terrain</h3>
+    <ol>
+      <li>Elle est dans ta <b>main</b> (juste une carte).</li>
+      <li>Tu paies le mana → tu la <b>lances</b> → c’est un <b>sort</b> (sur la pile).</li>
+      <li>Si personne ne l’annule, le sort <b>se résout</b> :
+        <ul>
+          <li><b>Permanent</b> (créature, artefact, enchantement, planeswalker, bataille) → il reste sur le <b>champ de bataille</b>.</li>
+          <li><b>Éphémère / rituel</b> → l’effet se fait, puis la carte va au <b>cimetière</b>.</li>
+        </ul>
+      </li>
+    </ol>
+    <p>Donc « Lightning Bolt » est un sort. « Captain America » aussi, au moment où tu le lances. Une fois qu’il est sur la table, ce n’est plus un sort : c’est une <b>créature</b>.</p>
+  `
+},
+{
+  id:'land',
+  cat:'terrain sort',
+  title:'Les terrains ne sont pas des sorts',
+  tags:'terrain land mana engager jouer',
+  html:`
+    <p>Les terrains (plaine, marais, île…) <b>ne se lancent pas</b>. Tu en joues <b>un seul par tour</b>, pendant ta phase principale, quand la pile est vide.</p>
+    <p>Pour payer un sort, tu <b>engages</b> un terrain (tu le tournes de côté). Il produit sa couleur. Au début de ton prochain tour, tu <b>dégages</b> tout.</p>
+    <div class="grid two">
+      <div class="card"><b>Plaine</b> blanc <span class="mana"><span style="background:var(--w)"></span></span></div>
+      <div class="card"><b>Île</b> bleu <span class="mana"><span style="background:var(--u)"></span></span></div>
+      <div class="card"><b>Marais</b> noir <span class="mana"><span style="background:var(--b)"></span></span></div>
+      <div class="card"><b>Montagne</b> rouge <span class="mana"><span style="background:var(--r)"></span></span></div>
+      <div class="card"><b>Forêt</b> vert <span class="mana"><span style="background:var(--g)"></span></span></div>
+    </div>
+    <p class="muted" style="margin-top:10px">Le chiffre dans un losange (ex. 2) = mana de n’importe quelle couleur. Un symbole coloré = cette couleur-là.</p>
+  `
+},
+{
+  id:'types',
+  cat:'type sort',
+  title:'Les 7 types de sorts (cartes que tu lances)',
+  tags:'éphémère rituel créature artefact enchantement planeswalker bataille types',
+  html:`
+    <div class="grid">
+      <div class="card"><b>Éphémère</b> (instant) — le plus flexible. Tu le lances <b>presque quand tu veux</b> : tour adverse, au milieu du combat, en réponse à un autre sort. Effet, puis cimetière.</div>
+      <div class="card"><b>Rituel</b> (sorcery) — même idée qu’un éphémère (effet puis cimetière) mais <b>seulement pendant ta phase principale</b>, pile vide. Tu ne peux pas l’utiliser « en réponse ».</div>
+      <div class="card"><b>Créature</b> — arrive sur la table, a Force / Endurance (ex. 3/2). Attaque et bloque. A le <b>mal d’invocation</b> : le tour où elle arrive, elle ne peut en général ni attaquer ni utiliser une capacité avec ⟳ (engager).</div>
+      <div class="card"><b>Artefact</b> — objet magique. Reste. Parfois c’est aussi une créature (robot, Ultron…). Souvent incolore.</div>
+      <div class="card"><b>Enchantement</b> — magie permanente. Une <b>aura</b> s’attache à une créature (Pacifisme). Si la créature meurt, l’aura va au cimetière.</div>
+      <div class="card"><b>Planeswalker</b> — allié à loyauté. Tes sorts peuvent encore le viser. L’adversaire peut l’attaquer à la place de toi.</div>
+      <div class="card"><b>Bataille</b> — rare. Tu la « défends » ou tu la « attaques » selon le type. Pas dans votre beginner box Marvel.</div>
+    </div>
+    <div class="ex"><b>Le piège n°1 :</b> « rituel » n’est pas plus fort qu’éphémère. C’est juste <i>moins flexible</i>. Lame du destin (éphémère) = tu tues une créature même pendant le combat. Un rituel « détruire une créature » = seulement à ton tour, tranquillement.</div>
+  `
+},
+{
+  id:'permanent',
+  cat:'type sort',
+  title:'Permanent vs one-shot',
+  tags:'permanent champ de bataille cimetière',
+  html:`
+    <p><b>Permanent</b> = ça reste sur la table une fois résolu : créature, artefact, enchantement, planeswalker, bataille, <i>et terrains</i>.</p>
+    <p><b>One-shot</b> = éphémère et rituel. Ils font leur truc et meurent au cimetière.</p>
+    <p>Le cimetière n’est pas « mort pour toujours ». Certaines cartes (Réanimation merveilleuse) ramènent des créatures du cimetière.</p>
+  `
+},
+{
+  id:'turn',
+  cat:'tour',
+  title:'Un tour, dans l’ordre',
+  tags:'tour phase dégager entretien piocher principale combat fin',
+  html:`
+    <ol>
+      <li><b>Dégager</b> — tes cartes engagées se redressent. Pas de réponse ici.</li>
+      <li><b>Entretien</b> — certains textes « au début de l’entretien » se déclenchent.</li>
+      <li><b>Pioche</b> — tu prends 1 carte. (Sauf le tout premier tour du joueur qui commence : pas de pioche.)</li>
+      <li><b>Phase principale 1</b> — tu peux jouer un terrain, lancer des sorts (rituels compris), activer des capacités.</li>
+      <li><b>Combat</b> — voir la fiche Combat.</li>
+      <li><b>Phase principale 2</b> — pareil que la 1. Terrain si tu ne l’as pas encore joué.</li>
+      <li><b>Fin / nettoyage</b> — « jusqu’à la fin du tour » expire. Si tu as <b>plus de 7 cartes</b> en main, tu défausses le surplus.</li>
+    </ol>
+    <p>L’adversaire peut lancer des <b>éphémères</b> à presque tous les moments où tu as la priorité — pas pendant dégagement / pioche / nettoyage (sauf effets spéciaux).</p>
+  `
+},
+{
+  id:'combat',
+  cat:'combat',
+  title:'Le combat, étape par étape',
+  tags:'attaquer bloquer blessures force endurance combat',
+  html:`
+    <ol>
+      <li>Tu déclares tes <b>attaquants</b> (tu les engages, sauf vigilance).</li>
+      <li>L’adversaire déclare ses <b>bloqueurs</b> : une créature peut bloquer une attaquante (sauf vol, menace, etc.).</li>
+      <li>Les <b>blessures</b> : Force = dégâts infligés. Endurance = combien elle encaisse ce tour avant de mourir.</li>
+    </ol>
+    <div class="ex">Un 3/2 qui n’est pas bloqué → 3 blessures au joueur (on part de 20 points de vie, 0 = perdu).<br>
+    Un 3/2 bloqué par un 2/2 → le 3/2 tue le 2/2, et prend 2 blessures : il survit (il fallait 2 dégâts, endurance 2… attends : 2 blessures sur 2 d’endurance = il meurt aussi). 3/2 vs 2/2 : les deux meurent.</div>
+    <p><b>Mal d’invocation :</b> une créature qui vient d’arriver ne peut pas attaquer ce tour. Elle <b>peut bloquer</b> dès le tour de l’adversaire.</p>
+  `
+},
+{
+  id:'stack',
+  cat:'pile sort',
+  title:'La pile (répondre à un sort)',
+  tags:'pile stack réponse annuler priorité',
+  html:`
+    <p>Quand quelqu’un lance un sort, il n’arrive pas tout de suite. Il va sur la <b>pile</b>. L’autre joueur peut lancer un éphémère « par-dessus ».</p>
+    <p>On résout <b>le dernier arrivé d’abord</b> (comme une pile d’assiettes).</p>
+    <div class="ex">Toi tu lances Captain America. Ton frère lance Lame du destin en visant Cap <i>encore sur la pile</i> ? Non : Lame du destin détruit une <b>créature</b>. Cap n’est une créature que <b>après</b> résolution. Il faut attendre qu’il soit sur la table, puis le tuer.</div>
+    <p>Les terrains ne vont pas sur la pile. Jouer un terrain = immédiat.</p>
+  `
+},
+{
+  id:'keywords',
+  cat:'mot-cle',
+  title:'Mots-clés que vous allez voir',
+  tags:'vol menace vigilance célérité flash lien de vie défenseur prouesse surveiller recyclage',
+  html:`
+    <div class="grid two">
+      <div class="card"><b>Vol</b> — bloqueable seulement par le vol ou la portée.</div>
+      <div class="card"><b>Menace</b> — il faut <b>deux</b> bloqueurs (Les prestigieuses Grapplers).</div>
+      <div class="card"><b>Vigilance</b> — attaque sans s’engager. Peut encore bloquer.</div>
+      <div class="card"><b>Célérité</b> (haste) — ignore le mal d’invocation, attaque tout de suite.</div>
+      <div class="card"><b>Flash</b> — tu lances cette carte comme un éphémère.</div>
+      <div class="card"><b>Lien de vie</b> — les blessures qu’elle inflige te soignent.</div>
+      <div class="card"><b>Défenseur</b> — ne peut pas attaquer.</div>
+      <div class="card"><b>Prouesse</b> — tu lances un sort non-créature → elle gagne +1/+1 jusqu’à la fin du tour (Agent d’Atlas).</div>
+      <div class="card"><b>Surveiller 1</b> — tu regardes la carte du dessus, tu peux la mettre au cimetière (Heure de la défaite).</div>
+      <div class="card"><b>Recyclage</b> — tu paies, tu défausses cette carte, tu cherches un terrain du type indiqué.</div>
+    </div>
+  `
+},
+{
+  id:'deck',
+  cat:'deck',
+  title:'Taille d’un deck',
+  tags:'deck 60 commander 100 4 copies',
+  html:`
+    <ul>
+      <li><b>Cuisine / 60 cartes :</b> minimum 60, pas de max. Restez à 60. Max <b>4 copies</b> d’une carte (terrains de base illimités).</li>
+      <li><b>Commander :</b> exactement 100 (99 + le commandant). 1 copie de chaque (sauf terrains de base).</li>
+      <li><b>Limited / draft :</b> minimum 40.</li>
+    </ul>
+    <p>Entre frères : 60 chacun, le plus simple.</p>
+  `
+},
+{
+  id:'priority',
+  cat:'tour pile',
+  title:'Qui a le droit de parler ? (priorité)',
+  tags:'priorité répondre éphémère',
+  html:`
+    <p>Le joueur dont c’est le tour joue en premier. Quand il a fini une action, l’autre peut répondre avec un éphémère.</p>
+    <p>Si les deux passent, on résout le haut de la pile, puis on re-demande.</p>
+    <p class="muted">Pour débuter : après chaque sort, demande « tu réponds ? ». Ça évite les disputes.</p>
+  `
+},
+{
+  id:'win',
+  cat:'tour',
+  title:'Comment on gagne / on perd',
+  tags:'vie 20 poison deck out milleur',
+  html:`
+    <ul>
+      <li>Chacun commence à <b>20</b> points de vie (Commander : 40).</li>
+      <li>0 vie ou moins = perdu.</li>
+      <li>Si tu dois piocher et que ta bibliothèque est vide = perdu.</li>
+      <li>10 marqueurs poison = perdu (rare chez vous).</li>
+    </ul>
+  `
+},
+{
+  id:'aura-off',
+  cat:'type sort',
+  title:'Comment retirer un enchantement',
+  tags:'enlever retirer casser detruire aura pacifisme enchantement naturalize disenchant',
+  html:`
+    <p>Tu ne peux pas l’enlever « à la main ». Il faut une carte, ou casser ce à quoi l’aura est collée.</p>
+    <ol>
+      <li><b>Aura</b> (Pacifisme) : tuer / exiler / renvoyer la créature → l’enchantement va au cimetière tout seul.</li>
+      <li>Carte « détruisez un enchantement » (ou artefact ou enchantement) : vise l’enchantement lui-même.</li>
+      <li>Le renvoyer en main / l’exiler.</li>
+    </ol>
+    <p class="muted">Dans le tas Marvel de la table, vous n’avez presque pas de « tueur d’enchantements ». Pour Pacifisme : Lame du destin / Heure de la défaite / Acte obscur sur la créature.</p>
+  `
+},
+{
+  id:'errors',
+  cat:'sort combat',
+  title:'Erreurs de débutants',
+  tags:'erreur mal invocation 4 copies terrain sort',
+  html:`
+    <ul>
+      <li>Lancer 2 terrains dans le même tour.</li>
+      <li>Attaquer avec une créature qui vient d’arriver (mal d’invocation).</li>
+      <li>Croire qu’un rituel se joue au tour de l’autre.</li>
+      <li>Compter une créature comme un « sort » alors qu’elle est déjà sur la table (pour Prouesse, il faut lancer un <i>nouveau</i> sort).</li>
+      <li>Oublier de dégager au début du tour.</li>
+      <li>Mettre plus de 4 copies de la même carte (hors terrains de base) en 60 cartes.</li>
+    </ul>
+  `
+}
+];
+
+const THEMES = [
+  ['table','Table'],
+  ['papier','Papier'],
+  ['nuit','Nuit'],
+  ['ink','Encre']
+];
+const skinKey = 'magic-regles-skin';
+function applySkin(){
+  let s = {theme:'table', dense:'off'};
+  try{ s = {...s, ...JSON.parse(localStorage.getItem(skinKey)||'{}')}; }catch{}
+  document.documentElement.dataset.theme = s.theme;
+  document.documentElement.dataset.dense = s.dense;
+  document.querySelectorAll('#themes .swatch').forEach(b => b.classList.toggle('on', b.dataset.theme===s.theme));
+  document.querySelectorAll('[data-dense]').forEach(b => b.classList.toggle('on', b.dataset.dense===s.dense));
+}
+document.getElementById('skinBtn').onclick = () => document.getElementById('skinPanel').classList.toggle('hidden');
+const themesBox = document.getElementById('themes');
+THEMES.forEach(([id,label]) => {
+  const b = document.createElement('button');
+  b.className = 'swatch'; b.type='button'; b.dataset.theme=id; b.textContent=label;
+  b.onclick = () => {
+    const cur = JSON.parse(localStorage.getItem(skinKey)||'{}');
+    localStorage.setItem(skinKey, JSON.stringify({...cur, theme:id}));
+    applySkin();
+  };
+  themesBox.appendChild(b);
+});
+document.querySelectorAll('[data-dense]').forEach(b => b.onclick = () => {
+  const cur = JSON.parse(localStorage.getItem(skinKey)||'{}');
+  localStorage.setItem(skinKey, JSON.stringify({...cur, dense:b.dataset.dense}));
+  applySkin();
+});
+applySkin();
+
+const chips = document.getElementById('chips');
+const list = document.getElementById('list');
+const q = document.getElementById('q');
+const empty = document.getElementById('empty');
+const count = document.getElementById('count');
+let filter = '';
+
+const STOP = new Set('le la les un une des du de d l a au aux et ou je tu on nous vous il elle c est cest quoi comment ca ça trop tres plus moins pas'.split(' '));
+
+const SYN = {
+  spell:'sort', spells:'sort', instant:'ephemere', ephemere:'ephemere', ephemeres:'ephemere',
+  sorcery:'rituel', rituel:'rituel', rituels:'rituel',
+  creature:'creature', creatures:'creature',
+  enchant:'enchantement', enchantement:'enchantement', enchantements:'enchantement', aura:'enchantement', auras:'enchantement',
+  pacifisme:'enchantement', pacifism:'enchantement',
+  artefact:'artefact', artifact:'artefact',
+  planeswalker:'planeswalker', walker:'planeswalker',
+  land:'terrain', lands:'terrain', terrain:'terrain', terrains:'terrain', plaine:'terrain', marais:'terrain', ile:'terrain',
+  mana:'terrain', engager:'terrain', tap:'terrain', untap:'terrain', degager:'terrain',
+  stack:'pile', pile:'pile', repondre:'pile', reponse:'pile', priorite:'pile',
+  attack:'combat', attaquer:'combat', attaque:'combat', bloquer:'combat', bloqueur:'combat', combat:'combat',
+  flying:'vol', vol:'vol', menace:'menace', vigilance:'vigilance', haste:'celerite', celerite:'celerite',
+  flash:'flash', lifelink:'lien', prowess:'prouesse', surveiller:'surveiller',
+  deck:'deck', commander:'deck', copies:'deck',
+  enlever:'retirer', retirer:'retirer', casser:'retirer', detruire:'retirer', destroy:'retirer',
+  tuer:'retirer', naturalize:'retirer', disenchant:'retirer',
+  tour:'tour', phase:'tour', piocher:'tour', pioche:'tour',
+  vie:'gagne', poison:'gagne', perdre:'gagne', gagner:'gagne',
+  invocation:'erreur', summoning:'erreur'
+};
+
+function norm(s){
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/['’]/g,' ');
+}
+function tokens(s){
+  return norm(s).split(/[^a-z0-9]+/).filter(w => w.length>1 && !STOP.has(w));
+}
+function stem(w){
+  if(w.length>5 && /tions$/.test(w)) return w.slice(0,-4);
+  if(w.length>4 && /(ments|iques)$/.test(w)) return w.slice(0,-1);
+  if(w.length>4 && /(ent|ait|ees|ers)$/.test(w)) return w.slice(0,-3);
+  if(w.length>3 && /(es|er|ez|ee)$/.test(w)) return w.slice(0,-2);
+  if(w.length>3 && /s$/.test(w)) return w.slice(0,-1);
+  return w;
+}
+function expand(w){
+  const out = new Set([w, stem(w)]);
+  const s = SYN[w] || SYN[stem(w)];
+  if(s){ out.add(s); out.add(stem(s)); }
+  return [...out];
+}
+function dist(a,b){
+  if(Math.abs(a.length-b.length)>1) return 99;
+  const m=a.length, n=b.length;
+  if(!m) return n; if(!n) return m;
+  const dp=Array(n+1);
+  for(let j=0;j<=n;j++) dp[j]=j;
+  for(let i=1;i<=m;i++){
+    let prev=dp[0]; dp[0]=i;
+    for(let j=1;j<=n;j++){
+      const tmp=dp[j];
+      dp[j]=a[i-1]===b[j-1]?prev:1+Math.min(prev, dp[j], dp[j-1]);
+      prev=tmp;
+    }
+  }
+  return dp[n];
+}
+function fuzzyHit(word, hayWords){
+  if(hayWords.has(word)) return 'exact';
+  for(const h of hayWords){
+    if(h.startsWith(word) || word.startsWith(h)) return 'prefix';
+  }
+  if(word.length>=4){
+    for(const h of hayWords){
+      if(h.length>=4 && dist(word,h)<=1) return 'typo';
+    }
+  }
+  return null;
+}
+
+ARTICLES.forEach(a => {
+  const text = norm(a.title + ' ' + a.tags + ' ' + a.cat + ' ' + a.html.replace(/<[^>]+>/g,' '));
+  a._text = text;
+  a._words = new Set(tokens(text).flatMap(expand));
+});
+
+function scoreArticle(a, qTokens){
+  if(!qTokens.length) return {ok:true, score:0, why:''};
+  let score = 0, why = [];
+  const titleN = norm(a.title);
+  const titleW = new Set(tokens(a.title).flatMap(expand));
+  for(const raw of qTokens){
+    const vars = expand(raw);
+    let best = null;
+    for(const v of vars){
+      const t = fuzzyHit(v, titleW) || (titleN.includes(v) ? 'title' : null);
+      if(t){ best = t==='exact'||t==='title' ? 'titre' : t; break; }
+      const b = fuzzyHit(v, a._words) || (a._text.includes(v) ? 'body' : null);
+      if(b){ best = b; break; }
+    }
+    if(!best) return {ok:false, score:0, why:''};
+    score += best==='titre'||best==='exact' ? 12 : best==='prefix' ? 6 : best==='typo' ? 4 : 3;
+    if(best==='typo') why.push('faute proche de « '+raw+' »');
+    else if(SYN[raw]) why.push('aussi : '+SYN[raw]);
+  }
+  return {ok:true, score, why:[...new Set(why)].join(' · ')};
+}
+
+function hi(text, qTokens){
+  if(!qTokens.length) return text;
+  const parts = [...new Set(qTokens.flatMap(expand))].filter(w=>w.length>2).sort((a,b)=>b.length-a.length);
+  if(!parts.length) return text;
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp('('+parts.map(esc).join('|')+')','gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+CHIPS.forEach(([label, val], i) => {
+  const b = document.createElement('button');
+  b.className = 'chip' + (i===0?' on':'');
+  b.type = 'button';
+  b.textContent = label;
+  b.dataset.v = val;
+  b.onclick = () => {
+    filter = val;
+    [...chips.children].forEach(x => x.classList.toggle('on', x===b));
+    render();
+  };
+  chips.appendChild(b);
+});
+
+function render(){
+  const qTokens = tokens(q.value);
+  const ranked = ARTICLES.map(a => {
+    const okChip = !filter || a.cat.includes(filter);
+    const r = scoreArticle(a, qTokens);
+    return {a, okChip, ...r};
+  }).filter(x => x.okChip && x.ok).sort((x,y)=> y.score - x.score);
+
+  list.innerHTML = ranked.map(({a, why, score}) => {
+    const hint = qTokens.length && why ? `<p class="why">${why}</p>` : '';
+    return `<article data-id="${a.id}" data-s="${score}">${hint}<h2>${hi(a.title, qTokens)}</h2>${a.html}</article>`;
+  }).join('');
+  empty.classList.toggle('hidden', ranked.length>0);
+  count.textContent = ranked.length + ' fiche' + (ranked.length>1?'s':'') + (qTokens.length?' · trié par pertinence':'');
+}
+q.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>

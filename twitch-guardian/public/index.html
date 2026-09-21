@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Twitch Guardian</title>
+<style>body{font-family:system-ui;max-width:720px;margin:2rem auto;padding:0 1rem;background:#111;color:#eee}input,button,textarea{font:inherit;padding:.55rem;margin:.2rem}textarea{width:100%;min-height:6rem}button{cursor:pointer}.card{border:1px solid #555;border-radius:10px;padding:1rem;margin:1rem 0}</style>
+<h1>🛡️ Twitch Guardian</h1><p>Règles par streamer autorisé.</p><main id="channels"></main>
+<script>
+const root=document.querySelector('#channels');
+async function load(){const channels=await fetch('/api/channels').then(r=>r.json());root.innerHTML=channels.map(c=>`<section class="card"><h2>#${c.channel}</h2><label>Mots bloqués, séparés par une virgule<br><textarea id="terms-${c.channel}">${c.blockedTerms.join(', ')}</textarea></label><br><label><input id="links-${c.channel}" type="checkbox" ${c.blockLinks?'checked':''}> Bloquer les liens</label><br><button onclick="save('${c.channel}')">Enregistrer</button></section>`).join('')||'<p>Aucun streamer autorisé. Ajoute son pseudo à <code>AUTHORIZED_CHANNELS</code>.</p>'}
+async function save(channel){await fetch(`/api/channels/${channel}/rules`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({blockedTerms:document.querySelector(`#terms-${channel}`).value.split(',').map(x=>x.trim()).filter(Boolean),blockLinks:document.querySelector(`#links-${channel}`).checked})});load()}
+load();
+</script></html>

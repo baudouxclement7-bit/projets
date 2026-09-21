@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiche mémo — maths avant contrôle</title>
+<style>
+  :root { --bg:#10140e; --card:#1b2218; --ink:#f3efe4; --muted:#b4bda8; --gold:#d4b05c; --line:#3a4332; --ok:#c5e0a8; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; padding:18px 16px 56px; }
+  h1 { font-size:1.4rem; margin:0 0 4px; }
+  h2 { font-size:1.15rem; color:var(--gold); margin:22px 0 8px; }
+  h3 { font-size:1rem; margin:14px 0 6px; }
+  .sub { color:var(--muted); margin:0 0 18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin:0 0 12px; }
+  ol, ul { margin:6px 0 0 18px; padding:0; }
+  li { margin:4px 0; }
+  .box { background:#0e120c; border-radius:10px; padding:10px 12px; margin:8px 0; font-size:1.05rem; }
+  .warn { border-left:4px solid var(--gold); padding-left:10px; color:var(--muted); }
+  .ok { color:var(--ok); }
+  .small { color:var(--muted); font-size:.92rem; }
+</style>
+</head>
+<body>
+  <h1>Fiche mémo — avant le contrôle</h1>
+  <p class="sub">Tes cours seulement : équations + second degré. À connaître = définitions. Le reste = savoir s’en servir, pas par cœur.</p>
+
+  <h2>1. Équations</h2>
+  <div class="card">
+    <h3>Vocabulaire</h3>
+    <ul>
+      <li><b>Équation</b> : égalité avec une inconnue.</li>
+      <li><b>Solution</b> : valeur qui marche.</li>
+      <li><b>Résoudre</b> : trouver <b>toutes</b> les solutions. On écrit S.</li>
+      <li>Aucune solution → S = ensemble vide.</li>
+    </ul>
+    <p class="warn">Toujours : d’abord ce qui est <b>interdit</b> (domaine), ensuite on résout.</p>
+  </div>
+
+  <div class="card">
+    <h3>1er degré</h3>
+    <ol>
+      <li>Développer</li>
+      <li>Isoler les termes avec x</li>
+      <li>Simplifier</li>
+      <li>Conclure (écrire S)</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Produit = 0</h3>
+    <div class="box">A × B = 0  &nbsp;⇔&nbsp;  A = 0  <b>ou</b>  B = 0</div>
+    <p>Souvent : tout mettre du même côté, <b>factoriser</b> (identité remarquable), puis la règle, puis S.</p>
+    <p class="small">Exemple : (2x + 1)(x − 3) = 0 → x = −1/2 ou x = 3.</p>
+    <p class="warn">A² + 4 = 0 : un carré + un nombre positif, souvent aucune solution.</p>
+  </div>
+
+  <div class="card">
+    <h3>Quotient = 0</h3>
+    <div class="box">A / B = 0  &nbsp;⇔&nbsp;  A = 0  <b>et</b>  B ≠ 0</div>
+    <ol>
+      <li>Valeurs interdites (bas = 0)</li>
+      <li>Haut = 0</li>
+      <li>Jeter si ça annule le bas</li>
+      <li>Écrire S</li>
+    </ol>
+    <p class="small">Exemple : (3x + 1) / (−x + 6) = 0. Interdit : x = 6. Haut : x = −1/3. −1/3 ≠ 6 donc S = { −1/3 }.</p>
+    <p class="warn">« On travaille dans R sauf 6 » ce n’est <b>pas</b> S. S c’est seulement les solutions.</p>
+  </div>
+
+  <h2>2. Second degré</h2>
+  <div class="card">
+    <h3>Définitions à connaître</h3>
+    <ul>
+      <li><b>Trinôme</b> : ax² + bx + c avec <b>a ≠ 0</b>. b ou c peuvent être 0 (ex. x² + 2, −4x²).</li>
+      <li><b>Degré</b> : plus grande puissance encore là. Affine = 1, constante = 0.</li>
+      <li><b>Racine</b> de P : P(a) = 0. Chercher les racines = résoudre P(x) = 0.</li>
+      <li><b>Deux polynômes égaux</b> : même degré <b>et</b> mêmes coefficients. Un point commun (P(1) = Q(1)) ne suffit pas.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Forme canonique</h3>
+    <div class="box">P(x) = a (x − α)² + β</div>
+    <div class="box">α = −b / (2a) &nbsp;&nbsp; et &nbsp;&nbsp; β = P(α)</div>
+    <p>Le sommet de la parabole est S(α , β). L’axe de symétrie est la droite x = α.</p>
+  </div>
+
+  <div class="card">
+    <h3>Variations et parabole</h3>
+    <ul>
+      <li><b>a &gt; 0</b> : forme U, <b>minimum</b> en x = α, valeur β. Décroît jusqu’à α, puis croît.</li>
+      <li><b>a &lt; 0</b> : forme ∩, <b>maximum</b> en x = α, valeur β. Croît jusqu’à α, puis décroît.</li>
+    </ul>
+    <p class="small">Pourquoi : (x − α)² est toujours ≥ 0. Le signe de a décide si la courbe va vers le haut ou vers le bas.</p>
+  </div>
+
+  <div class="card">
+    <h3>Exemples à savoir refaire</h3>
+    <ul>
+      <li>(2x + 3)(x − 1) = 2x² + x − 3 → a = 2, b = 1, c = −3. C’est un trinôme.</li>
+      <li>(x + 1)³ − (x − 1)³ = 6x² + 2 → encore un trinôme (même après des cubes).</li>
+      <li>P(x) = 2x³ + 3x² − 16x + 4, P(2) = 0 donc 2 est racine, puis P(x) = (x − 2)(2x² + 7x − 2).</li>
+    </ul>
+  </div>
+
+  <h2>3. Pièges</h2>
+  <div class="card">
+    <ul>
+      <li>√x ou un quotient → en général <b>pas</b> un polynôme.</li>
+      <li>Ne pas confondre racines et coefficients.</li>
+      <li>Oublier une valeur interdite dans un quotient.</li>
+      <li>Simplifier par x dans x² = 4x sans parler de x = 0.</li>
+    </ul>
+  </div>
+</body>
+</html>

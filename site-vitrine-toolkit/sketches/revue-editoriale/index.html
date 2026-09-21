@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signal Studio — Revue éditoriale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Source Serif 4',Georgia,serif;background:#f6f1e7;color:#1a1714}
+    a{color:inherit;text-decoration:none}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:18px 8vw;border-bottom:1px solid #1a1714}
+    .cta{border:1px solid #1a1714;padding:8px 14px;font-size:14px}
+    .hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:56px 8vw;align-items:center}
+    h1{font-family:'Playfair Display',serif;font-size:clamp(40px,6vw,72px);line-height:.95;font-weight:500}
+    .hero p{margin:18px 0 24px;max-width:420px;line-height:1.6;color:#4a453e}
+    .btn{display:inline-block;background:#1a1714;color:#f6f1e7;padding:12px 18px}
+    .press{position:relative;height:460px;border:1px solid #1a1714;background:#fffdf8;overflow:hidden}
+    .rule{position:absolute;left:8%;right:8%;height:1px;background:#1a1714;opacity:0;animation:12s ease-in-out infinite both}
+    .r1{top:16%;animation-name:s1}
+    .r2{top:28%;animation-name:s2}
+    .col{position:absolute;top:34%;bottom:14%;width:24%;background:#1a1714;opacity:0;animation:12s ease-in-out infinite both}
+    .c1{left:8%;height:auto;animation-name:s3}
+    .c2{left:38%;background:#c44b2f;animation-name:s4}
+    .c3{right:8%;background:#1a1714;opacity:.18;animation-name:s5}
+    .hd{position:absolute;top:18%;left:8%;font-family:'Playfair Display',serif;font-size:28px;opacity:0;animation:12s ease-in-out infinite both;animation-name:s2}
+    @keyframes s1{0%{opacity:0}10%,86%{opacity:1}100%{opacity:0}}
+    @keyframes s2{0%,10%{opacity:0}20%,86%{opacity:1}100%{opacity:0}}
+    @keyframes s3{0%,20%{opacity:0;transform:scaleY(.2);transform-origin:top}30%,86%{opacity:.12;transform:none}100%{opacity:0}}
+    @keyframes s4{0%,28%{opacity:0;transform:scaleY(.2);transform-origin:top}38%,86%{opacity:.85;transform:none}100%{opacity:0}}
+    @keyframes s5{0%,36%{opacity:0;transform:scaleY(.2);transform-origin:top}46%,86%{opacity:.18;transform:none}100%{opacity:0}}
+    .offers{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0 8vw 80px;border:1px solid #1a1714}
+    .offer{padding:28px;border-right:1px solid #1a1714}
+    .offer:last-child{border:0}
+    .offer b{display:block;font-size:28px;margin:10px 0}
+    #contact{padding:0 8vw 80px;max-width:640px}
+    form{display:grid;gap:10px;margin-top:16px}
+    input,select,button{min-height:48px;border:1px solid #1a1714;background:#fffdf8;padding:0 12px;font:inherit}
+    button{background:#1a1714;color:#f6f1e7;cursor:pointer}
+    .ok{display:none}
+    @media(max-width:800px){.hero,.offers{grid-template-columns:1fr}.offer{border-right:0;border-bottom:1px solid #1a1714}.press{height:340px}}
+  </style>
+</head>
+<body>
+  <nav><strong>Signal Studio</strong><a class="cta" href="#contact">Audit gratuit</a></nav>
+  <section class="hero">
+    <div>
+      <h1>Le site s’écrit comme une une.</h1>
+      <p>Titre, filets, colonnes. L’animation compose une page de revue — parce qu’un bon site, c’est d’abord une hiérarchie claire.</p>
+      <a class="btn" href="#contact">Demander ma version</a>
+    </div>
+    <div class="press">
+      <div class="rule r1"></div>
+      <div class="hd">SIGNAL / STUDIO</div>
+      <div class="rule r2"></div>
+      <div class="col c1"></div>
+      <div class="col c2"></div>
+      <div class="col c3"></div>
+    </div>
+  </section>
+  <section class="offers">
+    <article class="offer"><small>01</small><b>1 490 €</b><h3>Vitrine</h3><p>Une page, une promesse.</p></article>
+    <article class="offer"><small>02</small><b>2 900 €</b><h3>Conversion</h3><p>Site complet, preuves, contact.</p></article>
+    <article class="offer"><small>03</small><b>Devis</b><h3>Signature</h3><p>Direction artistique.</p></article>
+  </section>
+  <section id="contact">
+    <h2>Parler du projet</h2>
+    <form onsubmit="event.preventDefault();this.querySelector('.ok').style.display='block'">
+      <input placeholder="Activité" />
+      <select><option>Budget 1 500–3 000 €</option><option>3 000–5 000 €</option><option>5 000 €+</option></select>
+      <input type="email" placeholder="vous@email.fr" />
+      <button>Recevoir le mini-audit</button>
+      <div class="ok">Demande pré-validée ✓</div>
+    </form>
+  </section>
+</body>
+</html>

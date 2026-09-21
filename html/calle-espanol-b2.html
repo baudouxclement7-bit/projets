@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Calle — B2</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;max-width:100%;overflow-x:hidden;overscroll-behavior-x:none;-webkit-text-size-adjust:100%}
+    body{position:relative;touch-action:pan-y;background:#fff;color:#3c3c3c;font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .wrap{max-width:430px;margin:0 auto;min-height:100dvh;padding:16px 18px 108px;display:flex;flex-direction:column}
+    .hidden{display:none!important}
+
+    /* Home */
+    .home-hero{padding:28px 4px 8px}
+    .owl{width:72px;height:72px;border-radius:50%;background:#58cc02;display:grid;place-items:center;font-size:34px;margin-bottom:16px}
+    h1{font-size:28px;margin:0 0 6px;letter-spacing:-.03em;color:#1f1f1f}
+    .sub{margin:0 0 22px;color:#777}
+    .path{display:flex;flex-direction:column;gap:12px}
+    .lesson{
+      display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+      border:2px solid #e5e5e5;border-bottom-width:4px;border-radius:16px;
+      background:#fff;padding:14px 16px;font:inherit;cursor:pointer;color:#1f1f1f
+    }
+    .lesson:active{border-bottom-width:2px;transform:translateY(2px)}
+    .dot{width:46px;height:46px;border-radius:50%;background:#58cc02;color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+    .lesson b{display:block;font-size:16px}
+    .lesson span{display:block;font-size:13px;color:#777;font-weight:400}
+
+    /* Top bar */
+    .top{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+    .x{border:0;background:none;font-size:28px;line-height:1;color:#afafaf;cursor:pointer;padding:4px 8px}
+    .bar{flex:1;height:16px;background:#e5e5e5;border-radius:99px;overflow:hidden}
+    .bar i{display:block;height:100%;width:0;background:#58cc02;border-radius:99px;transition:width .25s}
+    .kind{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#afafaf;margin-bottom:10px}
+
+    .prompt{margin:0 0 14px;font-size:22px;font-weight:700;color:#1f1f1f;line-height:1.25}
+
+    /* Flashcard */
+    .card{
+      min-height:210px;border:2px solid #e5e5e5;border-radius:20px;background:#fff;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:28px 20px;text-align:center;cursor:pointer;margin-top:8px
+    }
+    .card .hint{font-size:13px;color:#afafaf;margin-bottom:10px}
+    .card .fr{font-size:20px;font-weight:700;color:#1f1f1f}
+    .card .es{font-size:22px;font-weight:700;color:#1cb0f6;margin-top:8px}
+    .card.flipped{border-color:#1cb0f6;background:#f5fbff}
+
+    /* Quiz */
+    .esline{margin:0 0 18px;font-size:20px;color:#1f1f1f}
+    .gap{border-bottom:3px solid #1cb0f6;padding:0 8px;color:#1cb0f6;font-weight:700}
+    .option{
+      display:block;width:100%;text-align:center;margin:0 0 12px;padding:16px 14px;
+      border:2px solid #e5e5e5;border-bottom-width:4px;border-radius:16px;
+      background:#fff;color:#1f1f1f;font:inherit;font-size:18px;font-weight:700;cursor:pointer
+    }
+    .option:active{border-bottom-width:2px;transform:translateY(2px)}
+    .option.pick{border-color:#1cb0f6;background:#ddf4ff;color:#1cb0f6}
+    .option.right{border-color:#58cc02;background:#d7ffb8;color:#58a700}
+    .option.wrong{border-color:#ff4b4b;background:#ffdfe0;color:#ea2b2b}
+    .option.idle{opacity:.45}
+    .explain{margin:8px 0 0;font-size:15px;color:#4b4b4b}
+
+    /* Bottom CTA */
+    .dock{
+      position:fixed;left:0;right:0;bottom:0;background:#fff;
+      border-top:2px solid #e5e5e5;padding:12px 18px calc(12px + env(safe-area-inset-bottom))
+    }
+    .dock .inner{max-width:430px;margin:0 auto;display:flex;gap:10px}
+    .cta{
+      flex:1;min-height:50px;border:0;border-radius:16px;font:inherit;font-weight:800;
+      letter-spacing:.04em;text-transform:uppercase;cursor:pointer
+    }
+    .cta.ghost{background:#fff;color:#1cb0f6;border:2px solid #e5e5e5;border-bottom-width:4px}
+    .cta.go{background:#58cc02;color:#fff;border-bottom:4px solid #46a302}
+    .cta.go:disabled{background:#e5e5e5;border-bottom-color:#cfcfcf;color:#afafaf}
+    .cta.go.bad{background:#ff4b4b;border-bottom-color:#ea2b2b}
+    .dock.ok{background:#d7ffb8;border-top-color:#9be15d}
+    .dock.ko{background:#ffdfe0;border-top-color:#ff9b9b}
+
+    /* End */
+    .endbox{text-align:center;padding:40px 8px 0}
+    .trophy{font-size:64px;margin-bottom:8px}
+    .score{font-size:32px;font-weight:800;margin:0 0 8px;color:#1f1f1f}
+    .miss{margin-top:14px;padding-top:14px;border-top:1px solid #eee;text-align:left;font-size:14px;color:#4b4b4b}
+
+    @media(max-width:760px){
+      html,body{overflow-x:hidden!important;max-width:100vw!important}
+      button,.option,.lesson,.card{transform:none}
+      button:hover,.option:hover{transform:none}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section id="home">
+      <div class="home-hero">
+        <div class="owl" aria-hidden="true">🦉</div>
+        <h1>Calle</h1>
+        <p class="sub">Leçon B2 · flash puis quiz, comme Duo.</p>
+      </div>
+      <div class="path">
+        <button class="lesson" type="button" data-mode="mix"><i class="dot">1</i><span><b>Leçon mixte</b><span>6 phrases · flash + quiz</span></span></button>
+        <button class="lesson" type="button" data-mode="tiempos"><i class="dot">2</i><span><b>Temps</b><span>imparfait, indefinido, subjonctif</span></span></button>
+        <button class="lesson" type="button" data-mode="quotidien"><i class="dot">3</i><span><b>Phrases</b><span>resto, métro, taff, maison</span></span></button>
+        <button class="lesson" type="button" data-mode="nuances"><i class="dot">4</i><span><b>Nuances</b><span>por/para, ser/estar, pedir</span></span></button>
+      </div>
+    </section>
+
+    <section id="play" class="hidden">
+      <div class="top">
+        <button class="x" id="quit" type="button" aria-label="Quitter">×</button>
+        <div class="bar"><i id="bar"></i></div>
+      </div>
+      <div class="kind" id="kind"></div>
+      <p class="prompt" id="prompt"></p>
+      <div id="stage"></div>
+    </section>
+
+    <section id="end" class="hidden">
+      <div class="endbox">
+        <div class="trophy">🎉</div>
+        <p class="score" id="scorebig"></p>
+        <p id="endMsg"></p>
+        <div id="misses"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="dock hidden" id="dock">
+    <div class="inner">
+      <button class="cta ghost" id="listen" type="button">Écouter</button>
+      <button class="cta go" id="next" type="button" disabled>Continuer</button>
+    </div>
+  </div>
+
+<script>
+const BANK = [
+  {cat:'tiempos', fr:'Quand j’étais petit, j’allais au parc tous les jours.', es:'Cuando era pequeño, _____ al parque todos los días.', options:['iba','fui'], answer:'iba', listen:'Cuando era pequeño, iba al parque todos los días.', why:'Habitude au passé → imperfecto (iba). Fui = un fait ponctuel.'},
+  {cat:'tiempos', fr:'Hier je suis allé chez le médecin.', es:'Ayer _____ al médico.', options:['fui','iba'], answer:'fui', listen:'Ayer fui al médico.', why:'Hier, action datée et finie → indefinido (fui).'},
+  {cat:'tiempos', fr:'Aujourd’hui j’ai vu Carlos au café.', es:'Hoy _____ a Carlos en el café.', options:['he visto','vi'], answer:'he visto', listen:'Hoy he visto a Carlos en el café.', why:'En Espagne, un passé encore dans la journée → perfecto (he visto).'},
+  {cat:'tiempos', fr:'Je te conseille de venir plus tôt.', es:'Te recomiendo que _____ más temprano.', options:['vengas','vienes'], answer:'vengas', listen:'Te recomiendo que vengas más temprano.', why:'Recomendar que → subjonctif (vengas).'},
+  {cat:'tiempos', fr:'Si j’avais le temps, j’irais.', es:'Si _____ tiempo, iría.', options:['tuviera','tengo'], answer:'tuviera', listen:'Si tuviera tiempo, iría.', why:'Irréel : si + imperfecto de subjuntivo + conditionnel.'},
+  {cat:'tiempos', fr:'Même s’il pleut, j’irai — la pluie n’est pas sûre.', es:'Aunque _____, iré al mercado.', options:['llueva','llueve'], answer:'llueva', listen:'Aunque llueva, iré al mercado.', why:'Aunque + subjonctif si ce n’est pas un fait.'},
+  {cat:'tiempos', fr:'Je cuisinais quand le téléphone a sonné.', es:'Estaba cocinando cuando _____ el teléfono.', options:['sonó','sonaba'], answer:'sonó', listen:'Estaba cocinando cuando sonó el teléfono.', why:'Le cadre est en imperfecto, l’événement qui coupe en indefinido.'},
+  {cat:'tiempos', fr:'Je viens de sortir du taff.', es:'_____ de salir del trabajo.', options:['Acabo','Termino'], answer:'Acabo', listen:'Acabo de salir del trabajo.', why:'Acabar de + infinitif = venir de faire.'},
+  {cat:'tiempos', fr:'Pourvu qu’il ne pleuve pas demain.', es:'Ojalá no _____ mañana.', options:['llueva','llueve'], answer:'llueva', listen:'Ojalá no llueva mañana.', why:'Ojalá + subjonctif.'},
+  {cat:'tiempos', fr:'Quand on aura fini, je t’appelle.', es:'Cuando _____, te llamo.', options:['terminemos','terminamos'], answer:'terminemos', listen:'Cuando terminemos, te llamo.', why:'Action pas encore faite : cuando + subjonctif.'},
+  {cat:'tiempos', fr:'Ça fait trois mois que je vis ici.', es:'Llevo tres meses _____ aquí.', options:['viviendo','vivir'], answer:'viviendo', listen:'Llevo tres meses viviendo aquí.', why:'Llevar + durée + gérondif.'},
+  {cat:'tiempos', fr:'Je ne crois pas qu’il y ait encore du métro.', es:'No creo que _____ metro a estas horas.', options:['haya','hay'], answer:'haya', listen:'No creo que haya metro a estas horas.', why:'No creo que → subjonctif.'},
+
+  {cat:'quotidien', fr:'Je fais les courses en rentrant.', es:'Voy a _____ la compra al volver.', options:['hacer','tomar'], answer:'hacer', listen:'Voy a hacer la compra al volver.', why:'Hacer la compra = faire les courses.'},
+  {cat:'quotidien', fr:'On se donne rendez-vous à 20h.', es:'_____ a las ocho delante del cine.', options:['Quedamos','Nos quedamos'], answer:'Quedamos', listen:'Quedamos a las ocho delante del cine.', why:'Quedar = RDV. Quedarse = rester.'},
+  {cat:'quotidien', fr:'J’ai vraiment pas envie de sortir.', es:'No me _____ nada salir.', options:['apetece','gusta'], answer:'apetece', listen:'No me apetece nada salir.', why:'Apetecer = avoir envie, plus naturel ici que gustar.'},
+  {cat:'quotidien', fr:'Je dois récupérer Lucía à 17h.', es:'Tengo que _____ a Lucía a las cinco.', options:['recoger','llevar'], answer:'recoger', listen:'Tengo que recoger a Lucía a las cinco.', why:'Recoger a alguien = aller chercher. Llevar = emmener.'},
+  {cat:'quotidien', fr:'Tu appelles le serveur pour l’addition.', es:'¿Me _____ la cuenta, por favor?', options:['traes','preguntas'], answer:'traes', listen:'¿Me traes la cuenta, por favor?', why:'¿Me traes la cuenta? Preguntar = poser une question.'},
+  {cat:'quotidien', fr:'Au bar, une petite pression.', es:'¿Me pones una _____, por favor?', options:['caña','pinta'], answer:'caña', listen:'¿Me pones una caña, por favor?', why:'En Espagne, caña = petite pression.'},
+  {cat:'quotidien', fr:'Je prends le métro, je te rejoins.', es:'_____ el metro y te alcanzo.', options:['Cojo','Llevo'], answer:'Cojo', listen:'Cojo el metro y te alcanzo.', why:'Espagne : coger el metro / el bus.'},
+  {cat:'quotidien', fr:'On te demande « ¿qué tal? » — ça va comme ça.', es:'Bueno, vamos _____.', options:['tirando','andando'], answer:'tirando', listen:'Bueno, vamos tirando.', why:'Vamos tirando = on se débrouille.'},
+  {cat:'quotidien', fr:'Tu me manques.', es:'Te _____ de menos.', options:['echo','hago'], answer:'echo', listen:'Te echo de menos.', why:'Echar de menos = manquer à quelqu’un.'},
+  {cat:'quotidien', fr:'Tu veux un créneau chez le dentiste.', es:'Quiero _____ hora para el dentista.', options:['pedir','preguntar'], answer:'pedir', listen:'Quiero pedir hora para el dentista.', why:'Pedir hora = prendre RDV.'},
+  {cat:'quotidien', fr:'Tu refuses un plan ce soir, poliment.', es:'Hoy no me _____ bien, ¿lo dejamos para mañana?', options:['viene','queda'], answer:'viene', listen:'Hoy no me viene bien, ¿lo dejamos para mañana?', why:'No me viene bien = ça ne m’arrange pas.'},
+  {cat:'quotidien', fr:'Le voisin met la musique trop fort.', es:'Perdona, ¿podrías _____ un poco la música?', options:['bajar','quitar'], answer:'bajar', listen:'Perdona, ¿podrías bajar un poco la música?', why:'Bajar = baisser. Quitar = éteindre.'},
+
+  {cat:'nuances', fr:'Le cadeau est pour Marta.', es:'Este regalo es _____ Marta.', options:['para','por'], answer:'para', listen:'Este regalo es para Marta.', why:'Para = destinataire. Por = cause, durée, passage.'},
+  {cat:'nuances', fr:'Je passe chez toi vers 19h.', es:'Paso _____ tu casa a eso de las siete.', options:['por','para'], answer:'por', listen:'Paso por tu casa a eso de las siete.', why:'Pasar por = passer par / chez.'},
+  {cat:'nuances', fr:'La boutique est fermée aujourd’hui.', es:'Hoy la tienda _____ cerrada.', options:['está','es'], answer:'está', listen:'Hoy la tienda está cerrada.', why:'État du moment → estar.'},
+  {cat:'nuances', fr:'María est super sympa.', es:'María _____ muy maja.', options:['es','está'], answer:'es', listen:'María es muy maja.', why:'Caractère → ser.'},
+  {cat:'nuances', fr:'Tu es à la maison, quelqu’un va à la cuisine.', es:'Si vas a la cocina, _____ un vaso de agua.', options:['tráeme','llévame'], answer:'tráeme', listen:'Si vas a la cocina, tráeme un vaso de agua.', why:'Traer = apporter vers toi. Llevar = emporter ailleurs.'},
+  {cat:'nuances', fr:'Tu sors avec le parapluie.', es:'_____ el paraguas por si acaso.', options:['Llevo','Traigo'], answer:'Llevo', listen:'Llevo el paraguas por si acaso.', why:'Llevar = emporter avec soi.'},
+  {cat:'nuances', fr:'J’ai demandé l’addition.', es:'_____ la cuenta.', options:['Pedí','Pregunté'], answer:'Pedí', listen:'Pedí la cuenta.', why:'Pedir = demander qu’on te donne quelque chose.'},
+  {cat:'nuances', fr:'Pas de pizza : une salade.', es:'No quiero pizza, _____ ensalada.', options:['sino','si no'], answer:'sino', listen:'No quiero pizza, sino ensalada.', why:'Sino corrige après une négation.'},
+  {cat:'nuances', fr:'S’il n’y a plus de pain, prends des biscuits.', es:'_____ hay pan, compra galletas.', options:['Si no','Sino'], answer:'Si no', listen:'Si no hay pan, compra galletas.', why:'Si no = condition. Deux mots.'},
+  {cat:'nuances', fr:'Je reste à la maison, je me sens pas bien.', es:'Me _____ en casa, no me encuentro bien.', options:['quedo','voy'], answer:'quedo', listen:'Me quedo en casa, no me encuentro bien.', why:'Quedarse = rester.'},
+  {cat:'nuances', fr:'Je ne me souviens plus de son nom.', es:'No me _____ de su nombre.', options:['acuerdo','recuerdo'], answer:'acuerdo', listen:'No me acuerdo de su nombre.', why:'Acordarse de. Recordar : no recuerdo su nombre, sans de.'},
+  {cat:'nuances', fr:'Très fatigué, je travaille beaucoup.', es:'Estoy _____ cansado. Trabajo _____.', options:['muy / mucho','mucho / muy'], answer:'muy / mucho', listen:'Estoy muy cansado. Trabajo mucho.', why:'Muy + adjectif. Mucho avec un verbe.'}
+];
+
+const state = { lastMode:'mix', steps:[], i:0, score:0, quizN:0, misses:[], flipped:false, answered:false, pick:null };
+
+function shuffle(a){
+  const b = a.slice();
+  for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; }
+  return b;
+}
+function $(id){ return document.getElementById(id); }
+function show(id){
+  ['home','play','end'].forEach(s => $(s).classList.toggle('hidden', s!==id));
+  $('dock').classList.toggle('hidden', id!=='play');
+}
+function speak(text){
+  if(!text || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-ES'; u.rate = 0.92;
+  const voices = speechSynthesis.getVoices();
+  const es = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('es'));
+  if(es) u.voice = es;
+  speechSynthesis.speak(u);
+}
+function poolFor(mode){
+  if(mode==='mix') return BANK.slice();
+  return BANK.filter(q => q.cat===mode);
+}
+function setBar(){
+  const p = state.steps.length ? (state.i / state.steps.length) * 100 : 0;
+  $('bar').style.width = p + '%';
+}
+function start(mode, customItems){
+  state.lastMode = mode;
+  const items = customItems || shuffle(poolFor(mode)).slice(0, 6);
+  const steps = [];
+  items.forEach(q => {
+    steps.push({kind:'flash', q});
+    steps.push({kind:'quiz', q});
+  });
+  state.steps = steps;
+  state.i = 0; state.score = 0; state.quizN = items.length; state.misses = [];
+  show('play');
+  renderStep();
+}
+function renderStep(){
+  const step = state.steps[state.i];
+  const q = step.q;
+  state.flipped = false; state.answered = false; state.pick = null;
+  setBar();
+  $('kind').textContent = step.kind === 'flash' ? 'Carte' : 'Choisis';
+  $('prompt').textContent = step.kind === 'flash' ? 'Tape la carte' : q.fr;
+  $('listen').onclick = () => speak(q.listen);
+  const next = $('next');
+  next.disabled = true;
+  next.textContent = 'Continuer';
+  next.classList.remove('bad');
+  $('dock').classList.remove('ok','ko');
+  const stage = $('stage');
+  stage.innerHTML = '';
+  if(step.kind === 'flash'){
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'card';
+    card.innerHTML = '<div class="hint">français → tape pour l’espagnol</div><div class="fr"></div><div class="es hidden"></div>';
+    card.querySelector('.fr').textContent = q.fr;
+    card.querySelector('.es').textContent = q.listen;
+    card.onclick = () => {
+      state.flipped = true;
+      card.classList.add('flipped');
+      card.querySelector('.hint').textContent = 'espagnol';
+      card.querySelector('.es').classList.remove('hidden');
+      next.disabled = false;
+      speak(q.listen);
+    };
+    stage.appendChild(card);
+  } else {
+    const es = document.createElement('p');
+    es.className = 'esline';
+    es.innerHTML = q.es.replace('_____', '<span class="gap">_____</span>');
+    stage.appendChild(es);
+    const box = document.createElement('div');
+    shuffle(q.options).forEach(opt => {
+      const b = document.createElement('button');
+      b.className = 'option';
+      b.type = 'button';
+      b.textContent = opt;
+      b.onclick = () => pickOpt(opt, b, q);
+      box.appendChild(b);
+    });
+    stage.appendChild(box);
+  }
+}
+function pickOpt(opt, btn, q){
+  if(state.answered) return;
+  [...document.querySelectorAll('.option')].forEach(el => el.classList.remove('pick'));
+  btn.classList.add('pick');
+  state.pick = opt;
+  $('next').disabled = false;
+  $('next').textContent = 'Vérifier';
+}
+function verifyQuiz(){
+  const q = state.steps[state.i].q;
+  const ok = state.pick === q.answer;
+  state.answered = true;
+  if(ok) state.score++;
+  else if(!state.misses.includes(q)) state.misses.push(q);
+  document.querySelectorAll('.option').forEach(el => {
+    if(el.textContent === q.answer) el.classList.add('right');
+    else if(el.textContent === state.pick && !ok) el.classList.add('wrong');
+    else el.classList.add('idle');
+    el.classList.remove('pick');
+  });
+  const exp = document.createElement('p');
+  exp.className = 'explain';
+  exp.textContent = (ok ? 'Bien. ' : 'Presque. ') + q.why;
+  $('stage').appendChild(exp);
+  const next = $('next');
+  next.disabled = false;
+  next.textContent = 'Continuer';
+  if(!ok) next.classList.add('bad');
+  $('dock').classList.add(ok ? 'ok' : 'ko');
+}
+function goNext(){
+  const step = state.steps[state.i];
+  if(step.kind === 'quiz' && !state.answered){
+    if(!state.pick) return;
+    verifyQuiz();
+    return;
+  }
+  if(state.i + 1 >= state.steps.length) finish();
+  else { state.i++; renderStep(); }
+}
+function finish(){
+  $('bar').style.width = '100%';
+  $('scorebig').textContent = state.score + ' / ' + state.quizN;
+  $('endMsg').textContent = state.score === state.quizN
+    ? 'Leçon parfaite.'
+    : state.score >= Math.ceil(state.quizN * 0.7)
+    ? 'Presque. Relance les erreurs.'
+    : 'On recolle les cartes ratées.';
+  const box = $('misses');
+  if(!state.misses.length) box.innerHTML = '';
+  else box.innerHTML = state.misses.map(m => `<div class="miss"><b>${m.listen}</b><br>${m.why}</div>`).join('');
+  show('end');
+  $('dock').classList.add('hidden');
+  $('dock').classList.remove('ok','ko');
+  // reuse dock buttons? show again via end - add a floating style using same dock
+  $('dock').classList.remove('hidden');
+  $('listen').textContent = 'Accueil';
+  $('listen').onclick = () => {
+    $('next').onclick = goNext;
+    $('listen').textContent = 'Écouter';
+    show('home');
+    $('dock').classList.add('hidden');
+  };
+  const next = $('next');
+  next.disabled = false;
+  next.classList.remove('bad');
+  next.textContent = state.misses.length ? 'Erreurs' : 'Rejouer';
+  next.onclick = () => {
+    next.onclick = goNext;
+    $('listen').textContent = 'Écouter';
+    if(state.misses.length) start('mix', shuffle(state.misses));
+    else start(state.lastMode);
+  };
+}
+document.querySelectorAll('.lesson').forEach(b => b.onclick = () => start(b.dataset.mode));
+$('quit').onclick = () => { show('home'); $('dock').classList.add('hidden'); $('next').onclick = goNext; $('listen').textContent = 'Écouter'; };
+$('next').onclick = goNext;
+if(window.speechSynthesis) speechSynthesis.getVoices();
+</script>
+</body>
+</html>
